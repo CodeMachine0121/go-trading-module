@@ -272,3 +272,112 @@ func TestToggleStrategy_Success(t *testing.T) {
 	assert.NotNil(t, resp)
 	assert.False(t, resp.IsActive)
 }
+
+func TestCreateStrategy_RepositoryError(t *testing.T) {
+	mockRepo := new(MockRepository)
+	mockLogger := new(MockLogger)
+	service := NewStrategyService(mockRepo, mockLogger)
+
+	req := &CreateStrategyRequest{
+		Symbol:    "BTC",
+		BuyLower:  30000.0,
+		SellUpper: 50000.0,
+	}
+
+	mockLogger.On("Info", mock.Anything, mock.Anything).Return()
+	mockLogger.On("Error", mock.Anything, mock.Anything).Return()
+	mockRepo.On("Create", mock.MatchedBy(func(s *domain.Strategy) bool {
+		return s.Symbol == "BTC"
+	})).Return(nil, domain.ErrStrategyNotFound)
+
+	resp, err := service.CreateStrategy(req)
+	assert.Error(t, err)
+	assert.Nil(t, resp)
+}
+
+func TestUpdateStrategy_StrategyNotFound(t *testing.T) {
+	mockRepo := new(MockRepository)
+	mockLogger := new(MockLogger)
+	service := NewStrategyService(mockRepo, mockLogger)
+
+	req := &UpdateStrategyRequest{
+		ID:        "non-existent",
+		Symbol:    "BTC",
+		BuyLower:  30000.0,
+		SellUpper: 50000.0,
+	}
+
+	mockLogger.On("Info", mock.Anything, mock.Anything).Return()
+	mockLogger.On("Error", mock.Anything, mock.Anything).Return()
+	mockRepo.On("Update", mock.MatchedBy(func(s *domain.Strategy) bool {
+		return s.ID == "non-existent"
+	})).Return(nil, domain.ErrStrategyNotFound)
+
+	resp, err := service.UpdateStrategy(req)
+	assert.Error(t, err)
+	assert.Nil(t, resp)
+}
+
+func TestDeleteStrategy_Error(t *testing.T) {
+	mockRepo := new(MockRepository)
+	mockLogger := new(MockLogger)
+	service := NewStrategyService(mockRepo, mockLogger)
+
+	mockLogger.On("Info", mock.Anything, mock.Anything).Return()
+	mockLogger.On("Error", mock.Anything, mock.Anything).Return()
+	mockRepo.On("Delete", "test-id").Return(domain.ErrStrategyNotFound)
+
+	err := service.DeleteStrategy("test-id")
+	assert.Error(t, err)
+}
+
+func TestListStrategies_Error(t *testing.T) {
+	mockRepo := new(MockRepository)
+	mockLogger := new(MockLogger)
+	service := NewStrategyService(mockRepo, mockLogger)
+
+	mockLogger.On("Info", mock.Anything, mock.Anything).Return()
+	mockLogger.On("Error", mock.Anything, mock.Anything).Return()
+	mockRepo.On("FindAll").Return(nil, domain.ErrStrategyNotFound)
+
+	resp, err := service.ListStrategies()
+	assert.Error(t, err)
+	assert.Nil(t, resp)
+}
+
+func TestToggleStrategy_NotFound(t *testing.T) {
+	mockRepo := new(MockRepository)
+	mockLogger := new(MockLogger)
+	service := NewStrategyService(mockRepo, mockLogger)
+
+	mockLogger.On("Info", mock.Anything, mock.Anything).Return()
+	mockLogger.On("Error", mock.Anything, mock.Anything).Return()
+	mockRepo.On("FindByID", "non-existent").Return(nil, domain.ErrStrategyNotFound)
+
+	resp, err := service.ToggleStrategy("non-existent")
+	assert.Error(t, err)
+	assert.Nil(t, resp)
+}
+
+func TestToggleStrategy_UpdateError(t *testing.T) {
+	mockRepo := new(MockRepository)
+	mockLogger := new(MockLogger)
+	service := NewStrategyService(mockRepo, mockLogger)
+
+	strategy := &domain.Strategy{
+		ID:        "test-id",
+		Symbol:    "BTC",
+		BuyLower:  30000.0,
+		SellUpper: 50000.0,
+		IsActive:  true,
+	}
+
+	mockLogger.On("Info", mock.Anything, mock.Anything).Return()
+	mockLogger.On("Error", mock.Anything, mock.Anything).Return()
+	mockRepo.On("FindByID", "test-id").Return(strategy, nil)
+	mockRepo.On("Update", mock.Anything).Return(nil, domain.ErrStrategyNotFound)
+
+	resp, err := service.ToggleStrategy("test-id")
+	assert.Error(t, err)
+	assert.Nil(t, resp)
+}

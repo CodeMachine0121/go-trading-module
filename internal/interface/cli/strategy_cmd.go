@@ -63,9 +63,9 @@ func NewStrategyCommand(svc *strategy.StrategyService, log logger.Logger) *cobra
 	createStrategyCmd.Flags().StringP("symbol", "s", "", "Symbol (e.g., BTC/USD)")
 	createStrategyCmd.Flags().Float64P("buy-lower", "b", 0, "Buy lower limit")
 	createStrategyCmd.Flags().Float64P("sell-upper", "u", 0, "Sell upper limit")
-	createStrategyCmd.MarkFlagRequired("symbol")
-	createStrategyCmd.MarkFlagRequired("buy-lower")
-	createStrategyCmd.MarkFlagRequired("sell-upper")
+	_ = createStrategyCmd.MarkFlagRequired("symbol")
+	_ = createStrategyCmd.MarkFlagRequired("buy-lower")
+	_ = createStrategyCmd.MarkFlagRequired("sell-upper")
 
 	// List command
 	listStrategiesCmd = &cobra.Command{
