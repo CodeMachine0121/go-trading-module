@@ -50,7 +50,7 @@ func (r *StrategyRepository) FindAll() ([]*domain.Strategy, error) {
 
 // Update modifies an existing strategy.
 func (r *StrategyRepository) Update(strategy *domain.Strategy) (*domain.Strategy, error) {
-	result := r.db.Model(&domain.Strategy{}).Where("id = ?", strategy.ID).Updates(strategy)
+	result := r.db.Save(strategy)
 	if result.Error != nil {
 		return nil, result.Error
 	}

@@ -24,14 +24,14 @@
 
 ### 1.1 初始化 Go Module 與專案結構
 
-- [ ] **[結構]** 初始化 `go.mod` 與基本專案目錄
+- [x] **[結構]** 初始化 `go.mod` 與基本專案目錄
   - `cmd/cli/main.go` - CLI 應用入口
   - `internal/domain/` - 領域模型
   - `internal/usecase/strategy/` - 策略業務邏輯
   - `internal/adapter/repository/` - 資料持久化
   - `pkg/logger/` - 日誌工具
 
-- [ ] **[結構]** 安裝核心依賴
+- [x] **[結構]** 安裝核心依賴
   - `gorm.io/gorm` - ORM
   - `gorm.io/driver/sqlite` - SQLite 驅動
   - `github.com/spf13/cobra` - CLI 框架
@@ -40,7 +40,7 @@
 
 ### 1.2 建立領域層 (Domain Layer)
 
-- [ ] **[紅燈]** 為 `Strategy` 實體編寫失敗測試
+- [x] **[紅燈]** 為 `Strategy` 實體編寫失敗測試
   - 測試檔案: `internal/domain/strategy_test.go`
   - 測試用例:
     - 建立有效的 Strategy
@@ -50,22 +50,22 @@
     - 驗證 `ShouldSell()` 邏輯
     - 驗證停用狀態下不會觸發買/賣
 
-- [ ] **[綠燈]** 實作 `Strategy` 領域模型
+- [x] **[綠燈]** 實作 `Strategy` 領域模型
   - 檔案: `internal/domain/strategy.go`
   - 結構體欄位: ID, Symbol, BuyLower, SellUpper, IsActive, CreatedAt, UpdatedAt
   - 方法: `Validate()`, `ShouldBuy()`, `ShouldSell()`
   - 確保最小化實現，只讓測試通過
 
-- [ ] **[重構]** 檢視 `Strategy` 的程式碼品質
+- [x] **[重構]** 檢視 `Strategy` 的程式碼品質
   - 檢查命名是否符合 rule.md 的慣例
   - 確認沒有重複邏輯
   - 優化註解與文件
 
-- [ ] **[紅燈]** 為領域錯誤編寫測試
+- [x] **[紅燈]** 為領域錯誤編寫測試
   - 測試檔案: `internal/domain/errors_test.go`
   - 驗證 `ErrInvalidStrategy`, `ErrInvalidPrice` 等錯誤
 
-- [ ] **[綠燈]** 定義領域錯誤變數
+- [x] **[綠燈]** 定義領域錯誤變數
   - 檔案: `internal/domain/errors.go`
 
 ---
@@ -74,11 +74,11 @@
 
 ### 2.1 資料庫遷移與 Repository 介面
 
-- [ ] **[結構]** 定義 Repository 介面
+- [x] **[結構]** 定義 Repository 介面
   - 檔案: `internal/adapter/repository/repository.go`
   - 介面方法: `Create()`, `FindByID()`, `FindAll()`, `Update()`, `Delete()`
 
-- [ ] **[紅燈]** 為 SQLite Repository 編寫測試
+- [x] **[紅燈]** 為 SQLite Repository 編寫測試
   - 測試檔案: `internal/adapter/repository/sqlite/strategy_repo_test.go`
   - 使用 in-memory SQLite (`:memory:`)
   - 測試用例:
@@ -88,17 +88,17 @@
     - 更新策略
     - 刪除策略
 
-- [ ] **[綠燈]** 實作 SQLite Repository
+- [x] **[綠燈]** 實作 SQLite Repository
   - 檔案: `internal/adapter/repository/sqlite/strategy_repo.go`
   - 實現 Repository 介面
   - 包含 GORM 標籤與表名映射
 
-- [ ] **[重構]** 檢視 Repository 實現
+- [x] **[重構]** 檢視 Repository 實現
   - 驗證錯誤處理
   - 檢查 SQL 注入風險
   - 優化查詢效能
 
-- [ ] **[結構]** 建立資料庫遷移
+- [x] **[結構]** 建立資料庫遷移
   - 檔案: `internal/adapter/repository/sqlite/migration.go`
   - 使用 GORM 的 `AutoMigrate` 或自訂 SQL 遷移
 
@@ -108,7 +108,7 @@
 
 ### 3.1 策略管理服務
 
-- [ ] **[紅燈]** 為 StrategyService 編寫失敗測試
+- [x] **[紅燈]** 為 StrategyService 編寫失敗測試
   - 測試檔案: `internal/usecase/strategy/service_test.go`
   - 使用 Mock Repository
   - 測試用例:
@@ -122,20 +122,20 @@
     - `DeleteStrategy()` - 成功刪除
     - `ToggleStrategy()` - 啟用/停用
 
-- [ ] **[綠燈]** 實作 StrategyService
+- [x] **[綠燈]** 實作 StrategyService
   - 檔案: `internal/usecase/strategy/service.go`
   - 依賴注入: Repository, Logger
   - 實現所有測試用例所需的最小程式碼
   - 包含基本輸入驗證
 
-- [ ] **[重構]** 檢視服務層品質
+- [x] **[重構]** 檢視服務層品質
   - 檢查錯誤處理與日誌記錄
   - 驗證依賴反轉原則
   - 優化驗證邏輯
 
 ### 3.2 建立型別與請求
 
-- [ ] **[結構]** 定義請求與回應型別
+- [x] **[結構]** 定義請求與回應型別
   - 檔案: `internal/usecase/strategy/dto.go`
   - `CreateStrategyRequest`
   - `UpdateStrategyRequest`
@@ -147,14 +147,14 @@
 
 ### 4.1 日誌基礎設施
 
-- [ ] **[結構]** 實作簡單的 Logger
+- [x] **[結構]** 實作簡單的 Logger
   - 檔案: `pkg/logger/logger.go`
   - 介面: `Logger` (Info, Error, Warn 方法)
   - 簡單實現 (可後續改進為 logrus/zap)
 
 ### 4.2 CLI 指令
 
-- [ ] **[紅燈]** 為 CLI 指令編寫集成測試
+- [x] **[紅燈]** 為 CLI 指令編寫集成測試
   - 測試檔案: `test/integration/cli_strategy_test.go`
   - 測試場景:
     - 建立策略指令
@@ -163,20 +163,20 @@
     - 刪除策略指令
     - 啟用/停用策略指令
 
-- [ ] **[綠燈]** 實作 CLI 指令
+- [x] **[綠燈]** 實作 CLI 指令
   - 檔案: `internal/interface/cli/strategy_cmd.go`
   - 使用 Cobra 框架
   - 整合 StrategyService
   - 實現指令: `strategy create`, `strategy list`, `strategy get`, `strategy update`, `strategy delete`, `strategy toggle`
 
-- [ ] **[重構]** 檢視 CLI 實現
+- [x] **[重構]** 檢視 CLI 實現
   - 驗證使用者互動流程
   - 改善錯誤訊息
   - 優化命令結構
 
 ### 4.3 主程式
 
-- [ ] **[結構]** 實作應用程式啟動器
+- [x] **[結構]** 實作應用程式啟動器
   - 檔案: `cmd/cli/main.go`
   - 初始化資料庫連線
   - 註冊 CLI 指令
